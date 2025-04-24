@@ -18,8 +18,8 @@
 
 set -e
 
-export DEVICE=RMX3031
-export VENDOR=realme
+export DEVICE=PEPM00
+export VENDOR=oppo
 
 INITIAL_COPYRIGHT_YEAR=2021
 

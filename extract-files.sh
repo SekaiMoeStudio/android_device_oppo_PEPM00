@@ -18,8 +18,8 @@
 
 set -e
 
-export DEVICE=RMX3031
-export VENDOR=realme
+export DEVICE=PEPM00
+export VENDOR=oppo
 
 # Load extract_utils and do some sanity checks
 MY_DIR="${BASH_SOURCE%/*}"
@@ -36,10 +36,48 @@ source "${HELPER}"
 
 function blob_fixup {
     case "$1" in
-        lib/libsink.so)
-            "$PATCHELF" --add-needed "libshim_vtservice.so" "$2"
+        vendor/bin/hw/vendor.mediatek.hardware.mtkpower@1.0-service)
+            "$PATCHELF" --replace-needed android.hardware.power-V2-ndk_platform.so android.hardware.power-V2-ndk.so "$2"
             ;;
-    esac
+        vendor/lib/hw/vendor.mediatek.hardware.pq@2.13-impl.so)
+            ;&
+        vendor/lib64/hw/vendor.mediatek.hardware.pq@2.13-impl.so)
+            "$PATCHELF" --replace-needed libutils.so libutils-v32.so "$2"
+            ;;
+        vendor/bin/hw/android.hardware.gnss-service.mediatek)
+            ;&
+        vendor/lib64/hw/android.hardware.gnss-impl-mediatek.so)
+           "$PATCHELF" --replace-needed android.hardware.gnss-V1-ndk_platform.so android.hardware.gnss-V1-ndk.so "$2"
+            ;;
+        vendor/bin/hw/android.hardware.media.c2@1.2-mediatek)
+            ;&
+        vendor/bin/hw/android.hardware.media.c2@1.2-mediatek-64b)
+           "$PATCHELF" --replace-needed libavservices_minijail_vendor.so libavservices_minijail.so "$2"
+           "$PATCHELF" --replace-needed libcodec2_vndk.so libcodec2_vndk-mtk.so "$2"
+           "$PATCHELF" --replace-needed libcodec2_hidl@1.0.so libcodec2_hidl-mtk@1.0.so "$2"
+            ;;
+        vendor/bin/mtk_agpsd)
+           "$PATCHELF" --replace-needed libcrypto.so libcrypto-v32.so "$2"
+            ;;
+        vendor/etc/init/android.hardware.bluetooth@1.1-service-mediatek.rc)
+            sed -i '/vts/Q' "$2"
+            ;;
+        vendor/lib*/libmtkcam_stdutils.so)
+            "$PATCHELF" --replace-needed libutils.so libutils-v32.so "$2"
+            ;;
+        odm/lib*/libui)
+            "$PATCHELF" --replace-needed android.hardware.graphics.common-V2-ndk_platform.so android.hardware.graphics.common-V2-ndk.so "$2"
+            ;;
+        vendor/lib64/libkeystore-engine-wifi-hidl.so)
+            "$PATCHELF" --replace-needed android.system.keystore2-V1-ndk_platform.so android.system.keystore2-V1-ndk.so "$2"
+            ;;
+        vendor/etc/init/android.hardware.bluetooth@1.0-service-mediatek.rc)
+            sed -i '/vts/Q' "$2"
+            ;;
+        vendor/bin/hw/android.hardware.wifi@1.0-service-lazy-mediatek)
+            "${PATCHELF}" --replace-needed "libwifi-hal.so" "libwifi-hal-mtk.so" "${2}"
+            ;;
+  esac
 }
 
 # Default to sanitizing the vendor folder before extraction

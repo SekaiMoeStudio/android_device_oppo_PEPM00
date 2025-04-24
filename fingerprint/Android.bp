@@ -14,11 +14,11 @@
 // limitations under the License.
 
 cc_binary {
-    name: "android.hardware.biometrics.fingerprint@2.3-service.PEPM00",
+    name: "android.hardware.biometrics.fingerprint@2.3-service.RMX3031",
     defaults: ["hidl_defaults"],
-    init_rc: ["android.hardware.biometrics.fingerprint@2.3-service.PEPM00.rc"],
+    init_rc: ["android.hardware.biometrics.fingerprint@2.3-service.RMX3031.rc"],
     relative_install_path: "hw",
-    vintf_fragments: ["android.hardware.biometrics.fingerprint@2.3-service.PEPM00.xml"],
+    vintf_fragments: ["android.hardware.biometrics.fingerprint@2.3-service.RMX3031.xml"],
     srcs: [
         "BiometricsFingerprint.cpp",
         "service.cpp",
@@ -38,10 +38,11 @@ cc_binary {
         "android.hardware.biometrics.fingerprint@2.3",
         "vendor.oplus.hardware.biometrics.fingerprint@2.1",
     ],
+    vendor: true
 }
 
 cc_library_static {
-    name: "libudfps_extension.PEPM00",
+    name: "libudfps_extension.RMX3031",
     srcs: ["UdfpsExtension.cpp"],
     include_dirs: [
         "frameworks/native/services/surfaceflinger/CompositionEngine/include"

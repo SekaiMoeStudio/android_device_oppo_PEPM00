@@ -16,3 +16,5 @@
 
 PRODUCT_MAKEFILES := \
     $(LOCAL_DIR)/aosp_PEPM00.mk
+
+COMMON_LUNCH_CHOICES := aosp_PEPM00-eng
